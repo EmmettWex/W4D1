@@ -1,4 +1,4 @@
-require 'debug'
+
 class PolyTreeNode
 
     def initialize(value)
@@ -12,7 +12,7 @@ class PolyTreeNode
     end
 
     def children
-        @children.dup #this way we cannot modify the array
+        @children #this way we cannot modify the array
     end
 
     def value
@@ -56,19 +56,29 @@ class PolyTreeNode
     end
 
     def dfs(target)
-        if self.value == target
-            return self 
-        else
-            @children.each do |child| 
-                if child.dfs(target) == target
-                    return child
-                end
-            end
+        return self if self.value == target
+       
+        @children.each do |child| 
+            res = child.dfs(target)
+            return res if !res.nil?
+        end
+        
+        return nil        
+    end
+
+    def bfs(target)
+        queue = [self]
+
+        until queue.empty?
+            cur_node = queue.shift
+            return cur_node if cur_node.value == target
+            
+            queue += cur_node.children
+
         end
 
-        return nil
+        nil
 
-        
     end
 end
 
