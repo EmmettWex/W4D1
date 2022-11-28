@@ -1,3 +1,4 @@
+require 'debug'
 class PolyTreeNode
 
     def initialize(value)
@@ -35,19 +36,39 @@ class PolyTreeNode
 
     def add_child(child)
         if !@children.include?(child)
-            # @children << child
-            child.parent = self
+            @children << child
+
         end
 
-        
-
-        # if child != nil
-        #     @children << child
-        # end
+        if child.parent != self
+            child.parent = self
+        end
     end
 
     def remove_child(child)
+        raise "This is not a child" if child.parent == nil
+
         @children.delete(child)
+
+        if child.parent == self
+            child.parent = nil
+        end
+    end
+
+    def dfs(target)
+        if self.value == target
+            return self 
+        else
+            @children.each do |child| 
+                if child.dfs(target) == target
+                    return child
+                end
+            end
+        end
+
+        return nil
+
+        
     end
 end
 
